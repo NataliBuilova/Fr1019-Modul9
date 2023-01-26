@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+</head>
+<body>
+   <input type="text" class="input1">номер страницы</input>
+   <input type="text" class="input2">номер страницы</input> 
+    <button>Загрузить картинку</button>
+    <div class="image"></div>
+
+    <script>
+        const resultNode = document.querySelector('.image');        
+
+        function displayResult(apiData) {
+            let img = "";
+
+            apiData.forEach(item => {
+                const imgBlock = `
+ <div">
+ <img style="width: 100px; height: 100px;" src="${item.download_url}"/>
+                </div>`;
+
+                img = img + imgBlock;
+            });
+                    
+            resultNode.innerHTML = img;
+        }        
+
+        const saveJson = localStorage.getItem("json");
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (saveJson) {
+                displayResult(JSON.parse(saveJson));
+            }
+        });
+
+        const bt = document.querySelector('button');
+
+        bt.onclick = () => {
+
+            const input1 = Number(document.querySelector('.input1').value);
+            const input2 = Number(document.querySelector('.input2').value);
+
+            if ( (input1 < 1 || input1 > 10 || isNaN(input1)) && (input2 < 1 || input2 > 10 || isNaN(input2))) {
+                console.log("Номер страницы и лимит вне диапазона от 1 до 10");
+            } else if (input1 < 1 || input1 > 10 || isNaN(input1)) {
+                console.log("Номер страницы вне диапазона от 1 до 10");   
+            } else if (input2 < 1 || input2 > 10 || isNaN(input2)) {
+                console.log("Лимит вне диапазона от 1 до 10");
+            } else {
+                fetch(`https://picsum.photos/v2/list?page=${input1}&limit=${input2}`)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((json) => {
+                    displayResult(json);
+                    localStorage.setItem('json', JSON.stringify(json));
+                })
+                .catch(() => { console.log('error') });
+            }
+        }
+    </script>
+</body>
+</html>
+
+

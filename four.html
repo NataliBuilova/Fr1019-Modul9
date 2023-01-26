@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+</head>
+<body>
+    <input id="input1" type="text">
+    <input id="input2" type="text">
+    <button>Загрузить картинку</button>
+    <div class="image"></div>
+
+    <script>
+        const resultNode = document.querySelector('.image');
+
+        function displayResult(srcImg) {
+            let cards = ''
+            const cardsBlock = `
+            <div>
+            <img src="${srcImg}"/>
+            </div>`;
+            
+            cards += cardsBlock;
+
+            resultNode.innerHTML = cards;
+}        
+
+          const bt = document.querySelector('button');
+          bt.onclick = () => {
+
+            const input1 = Number(document.querySelector('#input1').value);
+            const input2 = Number(document.querySelector('#input2').value);
+
+            if ( !(input1 < 100 || input2 < 100 || input1 > 300 || input2 > 300) ) {
+                fetch(`https://picsum.photos/${input1}/${input2}`)
+                .then((response) => {
+                    let url = response.url;
+                    displayResult(url);
+                })
+                .catch(() => { console.log('error') });
+            } else  {
+                console.log("Одно из чисел вне диапазона от 100 до 300");   
+            } 
+        }
+    </script>
+</body>
+</html>

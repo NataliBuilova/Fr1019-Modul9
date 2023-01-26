@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+</head>
+<body>
+
+   <input  type="text">
+   <button >Запрос картинок</button>
+
+    <div class="image"></div>
+
+    <script>
+        const resultNode = document.querySelector('.image');
+
+        function displayResult(apiData) {
+            let img = "";
+
+            apiData.forEach(item => {
+                const imgBlock = `
+    <div> <img style="width: 100px; height: 100px;" src="${item.download_url}"/>
+    </div>`;
+
+                img = img + imgBlock;
+            });
+                    
+            resultNode.innerHTML = img;
+        }        
+
+        const bt = document.querySelector('button');
+
+        bt.onclick = function () {
+            let value = document.querySelector('input').value;
+            value = Number (value);
+
+            if (value >=  1 && value <= 10) {
+
+                let url = `https://picsum.photos/v2/list?limit=${value}`;
+
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', url);
+                xhr.onload = function() {
+                    if (xhr.status != 200) { 
+                        console.log('Статус ответа: ', xhr.status);
+                    } else {
+                        displayResult(JSON.parse(xhr.response));
+                    }
+                };
+
+                xhr.onerror = function() {
+                    console.log('Ошибка! Статус ответа: ', xhr.status);
+                };
+
+                xhr.send();
+            } else {
+                console.log("Число вне диапазона от 1 до 10");
+            }
+        }
+    </script>
+</body>
+</html>
